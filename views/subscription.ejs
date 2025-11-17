@@ -1,0 +1,169 @@
+<%- include('partials/header', { title: 'Subscription - GreenTech Ride' }) %>
+
+<style>
+    .horizontal-scroll {
+        /* Hide scrollbar for aesthetic purposes */
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+    .horizontal-scroll::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+    }
+    .feature-card {
+        /* 
+          Using @apply requires Tailwind's CLI or PostCSS. 
+          Using standard CSS or Tailwind classes directly is safer.
+        */
+        padding: 1.5rem; /* p-6 */
+        border-radius: 0.75rem; /* rounded-xl */
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+        border-width: 1px;
+        border-color: #f3f4f6; /* border-gray-100 */
+    }
+    .feature-icon {
+        font-size: 1.875rem; /* text-3xl */
+        line-height: 2.25rem;
+        margin-bottom: 1rem; /* mb-4 */
+        height: 2.5rem; /* h-10 */
+        width: 2.5rem; /* w-10 */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9999px; /* rounded-full */
+    }
+</style>
+
+<main class="container-1300 mx-auto px-4 py-12 sm:py-20">
+    <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 text-center mb-4">
+        Unlock Freedom with GreenTech Subscription
+    </h1>
+    <p class="text-xl text-gray-600 text-center max-w-3xl mx-auto mb-16">
+        Subscribe to your favorite two-wheeler for long-term convenience, zero maintenance headaches, and exclusive perks.
+    </p>
+
+    <!-- Exclusive Subscriber Offers (Horizontal Scroll on Mobile) -->
+    <section class="text-center mb-16">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8 inline-flex items-center">
+            <span class="text-green-500 mr-2">✦</span> Exclusive Subscriber Offers <span class="text-green-500 ml-2">✦</span>
+        </h2>
+        
+        <!-- Horizontal Scroll Container -->
+        <!-- 
+          FIX: Added Tailwind classes directly for horizontal scroll.
+          'w-80' sets a fixed width on mobile, 'flex-shrink-0' prevents shrinking.
+          'md:w-auto' resets the width on medium screens to fit the grid.
+        -->
+        <div class="flex overflow-x-auto md:grid md:grid-cols-3 md:overflow-visible gap-6 horizontal-scroll pb-4">
+            
+            <!-- Offer 1: Helmet -->
+            <div class="feature-card bg-white w-80 md:w-auto flex-shrink-0">
+                <div class="feature-icon bg-yellow-100 text-yellow-600">
+                    <!-- Helmet Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-3-5.26v1.26a4 4 0 0 1 2 3c0 2.22 1 4 3 4s3-1.78 3-4"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10C22 6.48 17.52 2 12 2z"/></svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Complimentary Helmet</h3>
+                <p class="text-gray-600 text-sm">On booking of 90+ days Subscription.</p>
+            </div>
+            
+            <!-- Offer 2: Discount -->
+            <div class="feature-card bg-white w-80 md:w-auto flex-shrink-0">
+                <div class="feature-icon bg-purple-100 text-purple-600">
+                    <!-- Tag/Discount Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2z"></path><circle cx="7" cy="7" r="1.5"></circle></svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2">20% Discount</h3>
+                <p class="text-gray-600 text-sm">On all GreenTech Merchandise purchases.</p>
+            </div>
+            
+            <!-- Offer 3: Free Service -->
+            <div class="feature-card bg-white w-80 md:w-auto flex-shrink-0">
+                <div class="feature-icon bg-blue-100 text-blue-600">
+                    <!-- Service/Wrench Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Free Annual Service</h3>
+                <p class="text-gray-600 text-sm">Includes oil change, tuning, and checks for 1-year plans.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reasons Why You Should Opt for YOR (SVG Icons) -->
+    <section class="text-center mb-16">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8 inline-flex items-center">
+            <span class="text-blue-500 mr-2">✦</span> Why Choose GreenTech Subscription <span class="text-blue-500 ml-2">✦</span>
+        </h2>
+
+        <div class="grid md:grid-cols-4 gap-6">
+            
+            <div class="feature-card bg-white">
+                <div class="feature-icon bg-green-100 text-green-500 rounded-full">
+                    <!-- Checkmark/Trust Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><path d="M22 4L12 14.01l-3-3"></path></svg>
+                </div>
+                <h3 class="font-bold mb-1">Total Peace of Mind</h3>
+                <p class="text-gray-500 text-sm">All vehicles are company verified and maintained.</p>
+            </div>
+            
+            <div class="feature-card bg-white">
+                <div class="feature-icon bg-indigo-100 text-indigo-500 rounded-full">
+                    <!-- Map/Cities Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                </div>
+                <h3 class="font-bold mb-1">Pan-City Presence</h3>
+                <p class="text-gray-500 text-sm">Present in 12+ major cities across India.</p>
+            </div>
+
+            <div class="feature-card bg-white">
+                <div class="feature-icon bg-red-100 text-red-500 rounded-full">
+                    <!-- Truck/Delivery Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                </div>
+                <h3 class="font-bold mb-1">Doorstep Delivery*</h3>
+                <p class="text-gray-500 text-sm">Get your bike delivered and picked up for convenience.</p>
+            </div>
+            
+            <div class="feature-card bg-white">
+                <div class="feature-icon bg-teal-100 text-teal-500 rounded-full">
+                    <!-- Bike/Fleet Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3.5"></circle><circle cx="18.5" cy="17.5" r="3.5"></circle><path d="M15 17.5h-5.5V14l-3-3 4-3 2 3h2.5"></path></svg>
+                </div>
+                <h3 class="font-bold mb-1">Diverse Fleet</h3>
+                <p class="text-gray-500 text-sm">Scooters, bikes, and electric vehicles ready for hire.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Get Started Section (How It Works) -->
+    <section class="text-center">
+        <h2 class="text-3xl font-bold text-gray-900 mb-12 inline-flex items-center">
+            <span class="text-yellow-600 mr-2">✦</span> Get Started with Your Subscription <span class="text-yellow-600 ml-2">✦</span>
+        </h2>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            
+            <!-- Step 1 -->
+            <div class="text-center p-6 bg-white rounded-xl shadow-md border-t-4 border-indigo-600">
+                <div class="mx-auto h-12 w-12 bg-indigo-600 text-white font-bold text-2xl rounded-full flex items-center justify-center mb-4">1</div>
+                <h3 class="text-xl font-bold mb-2">Search & Select</h3>
+                <p class="text-gray-600">Choose your vehicle, location, and desired subscription duration.</p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="text-center p-6 bg-white rounded-xl shadow-md border-t-4 border-indigo-600">
+                <div class="mx-auto h-12 w-12 bg-indigo-600 text-white font-bold text-2xl rounded-full flex items-center justify-center mb-4">2</div>
+                <h3 class="text-xl font-bold mb-2">Confirm & Pay</h3>
+                <p class="text-gray-600">Verify your details and complete the secure payment process online.</p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="text-center p-6 bg-white rounded-xl shadow-md border-t-4 border-indigo-600">
+                <div class="mx-auto h-12 w-12 bg-indigo-600 text-white font-bold text-2xl rounded-full flex items-center justify-center mb-4">3</div>
+                <h3 class="text-xl font-bold mb-2">Ride Green!</h3>
+                <p class="text-gray-600">We deliver the bike to your doorstep, fully sanitized and ready to go.</p>
+            </div>
+        </div>
+        
+    </section>
+</main>
+
+<%- include('partials/footer') %>

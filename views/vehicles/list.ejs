@@ -1,0 +1,78 @@
+<%- include('../partials/header') %>
+
+<%
+  const currentSearchLocation = (typeof searchLocation !== 'undefined') ? searchLocation : 'All Locations';
+  const isSearch = currentSearchLocation && currentSearchLocation.toLowerCase() !== 'all locations';
+%>
+
+<div class="vehicle-list-container">
+  <header class="list-header">
+    <% if (isSearch) { %>
+      <h1 class="main-title">Search Results for "<%= currentSearchLocation %>"</h1>
+      <p class="sub-title">Found <%= vehicles.length %> verified vehicles available in this area.</p>
+    <% } else { %>
+      <h1 class="main-title">Available Vehicles</h1>
+      <p class="sub-title">Explore and book from our collection of bikes available for rent.</p>
+    <% } %>
+  </header>
+  
+  <div class="vehicle-grid" style="width: 4rem;">
+    <% if (vehicles && vehicles.length > 0) { %>
+
+      <% vehicles.forEach(vehicle => { %>
+        <div class="vehicle-card">
+          <div class="card-image-wrapper">
+
+            <!-- CLOUDINARY FIX: Use URL directly, no /uploads -->
+            <% if (vehicle.images && vehicle.images.length > 0) { %>
+              <img src="<%= vehicle.images[0] %>" alt="<%= vehicle.title %>" class="vehicle-image" />
+            <% } else { %>
+              <img src="/uploads/placeholder-vehicle.png" alt="Placeholder" class="image-placeholder" />
+            <% } %>
+
+          </div>
+
+          <div class="card-content">
+            <h3 class="vehicle-title"><%= vehicle.title %></h3>
+
+            <div class="vehicle-details-row">
+              <span class="detail-tag type-tag"><%= vehicle.type %></span>
+              <span class="detail-tag price-tag">
+                <span class="price-value">₹<%= vehicle.pricePerDay %></span>/day
+              </span>
+            </div>
+
+            <p class="vehicle-location mb-1 text-gray-600">
+              <span class="location-display">📍 <%= vehicle.location || 'N/A' %></span>
+            </p>
+
+            <p class="vehicle-description">
+              <%= vehicle.description 
+                  ? vehicle.description.substring(0, 70) + '...' 
+                  : 'Ride the newest model in comfort and style.'
+              %>
+            </p>
+
+            <% if (user) { %>
+              <a class="btn view-details-btn" href="/vehicles/<%= vehicle._id %>">View Details & Book</a>
+            <% } else { %>
+              <a class="btn view-details-btn" href="/users/login">Login to Book</a>
+            <% } %>
+
+          </div>
+        </div>
+      <% }) %>
+
+    <% } else { %>
+      <p class="no-vehicles-message">
+        <% if (isSearch) { %>
+          Sorry, no verified vehicles were found in <strong><%= currentSearchLocation %></strong>.
+        <% } else { %>
+          Sorry, no vehicles are available for rent right now.
+        <% } %>
+      </p>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

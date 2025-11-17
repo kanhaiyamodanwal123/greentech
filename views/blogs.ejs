@@ -1,0 +1,135 @@
+<%- include('partials/header', { title: 'Blog - GreenTech Ride' }) %>
+
+<style>
+    /* Custom styles for the blog grid */
+    .blog-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .blog-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
+    }
+    .featured-card {
+        transition: box-shadow 0.3s ease;
+    }
+    .featured-card:hover {
+        box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15);
+    }
+    /* Placeholder styles replacing images */
+    .img-placeholder {
+        height: 160px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.2rem;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    }
+    .featured-placeholder {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 800;
+        font-size: 1.5rem;
+    }
+</style>
+
+<main class="container-1300 mx-auto px-4 py-12 sm:py-20">
+    <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 text-center mb-4">
+        GreenTech Insights & Stories
+    </h1>
+    <p class="text-xl text-gray-600 text-center max-w-3xl mx-auto mb-16">
+        Discover articles on sustainable travel, vehicle maintenance tips, and city riding guides.
+    </p>
+
+    <!-- 1. Featured Article (Cleaner, image replaced with colored div) -->
+    <section class="mb-16">
+        <h2 class="text-3xl font-bold text-gray-900 mb-6 border-b pb-2">Featured Read</h2>
+        <a href="#article-1" class="featured-card block bg-white rounded-xl shadow-lg overflow-hidden md:flex">
+            <div class="md:w-1/2 h-64 md:h-auto bg-green-600">
+                <!-- Clean Placeholder -->
+                <div class="featured-placeholder">EV GUIDE</div>
+            </div>
+            <div class="md:w-1/2 p-8 flex flex-col justify-center">
+                <span class="text-sm font-semibold text-green-600 uppercase mb-2">Electric Mobility</span>
+                <h3 class="text-3xl font-extrabold text-gray-900 mb-4">
+                    The Ultimate Guide to Long-Term EV Scooter Rentals
+                </h3>
+                <p class="text-gray-600 mb-4">
+                    Learn everything about the economics, convenience, and environmental benefits of subscribing to an electric two-wheeler in your city.
+                </p>
+                <span class="text-sm text-gray-500">Read Time: 5 min &bull; Sep 25, 2025</span>
+            </div>
+        </a>
+    </section>
+
+    <!-- 2. Recent Articles Grid -->
+    <section>
+        <h2 class="text-3xl font-bold text-gray-900 mb-8 border-b pb-2">Recent Articles</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <!-- Article 1: Safety -->
+            <div class="blog-card bg-white rounded-xl shadow-md overflow-hidden">
+                <a href="#article-2">
+                    <!-- Clean Placeholder -->
+                    <div class="img-placeholder bg-yellow-600">SAFETY</div>
+                </a>
+                <div class="p-6">
+                    <span class="text-xs font-semibold text-yellow-600 uppercase mb-2 block">Safety</span>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">
+                        5 Essential Tips for Monsoon Bike Riding
+                    </h4>
+                    <p class="text-sm text-gray-600 mb-4">
+                        Ensure you stay safe and comfortable during the rainy season with these maintenance checks and riding adjustments.
+                    </p>
+                    <a href="#article-2" class="text-indigo-600 font-medium hover:text-indigo-800 text-sm">Continue Reading &rarr;</a>
+                </div>
+            </div>
+
+            <!-- Article 2: City Guide -->
+            <div class="blog-card bg-white rounded-xl shadow-md overflow-hidden">
+                <a href="#article-3">
+                    <!-- Clean Placeholder -->
+                    <div class="img-placeholder bg-blue-600">CITY GUIDE</div>
+                </a>
+                <div class="p-6">
+                    <span class="text-xs font-semibold text-blue-600 uppercase mb-2 block">City Guide</span>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">
+                        The Best Routes to Beat Bengaluru Traffic
+                    </h4>
+                    <p class="text-sm text-gray-600 mb-4">
+                        Discover hidden shortcuts and optimal times to travel through Koramangala and Indiranagar.
+                    </p>
+                    <a href="#article-3" class="text-indigo-600 font-medium hover:text-indigo-800 text-sm">Continue Reading &rarr;</a>
+                </div>
+            </div>
+
+            <!-- Article 3: Tech -->
+            <div class="blog-card bg-white rounded-xl shadow-md overflow-hidden">
+                <a href="#article-4">
+                    <!-- Clean Placeholder -->
+                    <div class="img-placeholder bg-purple-600">TECHNOLOGY</div>
+                </a>
+                <div class="p-6">
+                    <span class="text-xs font-semibold text-purple-600 uppercase mb-2 block">Technology</span>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">
+                        How Telematics is Transforming Bike Rentals
+                    </h4>
+                    <p class="text-sm text-gray-600 mb-4">
+                        A look into the GPS tracking and diagnostics systems that keep our fleet safe and efficient.
+                    </p>
+                    <a href="#article-4" class="text-indigo-600 font-medium hover:text-indigo-800 text-sm">Continue Reading &rarr;</a>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+</main>
+
+<%- include('partials/footer') %>

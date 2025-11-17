@@ -1,0 +1,130 @@
+<%- include('../partials/header') %>
+
+<div class="profile-page-container">
+  <div class="profile-sidebar">
+    <div class="profile-avatar-section">
+      
+      <!-- Avatar Upload (Local Preview Only – Not Cloudinary Yet) -->
+      <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)" />
+
+      <div class="avatar-circle">
+        <img 
+          src="<%= user.avatarUrl ? user.avatarUrl : 'https://placehold.co/120x120/FF69B4/FFFFFF?text=' + user.name.charAt(0).toUpperCase() %>" 
+          alt="<%= user.name %> Profile"
+          id="userAvatar"
+          class="user-avatar"
+        />
+      </div>
+
+      <div class="avatar-add-button" onclick="document.getElementById('avatarInput').click()">+</div>
+    </div>
+
+    <h2 class="user-name"><%= user.name %></h2>
+    <p class="user-role-text"><%= user.role %> Account</p>
+
+    <div class="verification-status-tag <%= user.isVerified ? 'verified' : 'unverified' %>">
+      <%= user.isVerified ? 'Verified' : 'Unverified' %>
+    </div>
+
+    <div class="profile-menu">
+      <h3 class="menu-heading">Account Information</h3>
+      <div class="menu-item active">
+        <span class="icon">👤</span> Profile Details
+      </div>
+      <div class="menu-item">
+        <span class="icon">📧</span> <%= user.email %>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-content">
+
+    <!-- REQUIRED DOCUMENT SECTION -->
+    <div class="card-section">
+      <h3 class="section-title">Required Documents</h3>
+
+      <div class="status-indicator <%= user.isVerified ? 'status-green' : 'status-red' %>">
+        <span class="status-dot"></span>
+        <p class="status-message">
+          Verification Status: <strong><%= user.isVerified ? 'Complete' : 'Pending' %></strong>
+        </p>
+      </div>
+
+      <p class="upload-note">Upload valid Government ID and Driving License to continue.</p>
+
+      <form action="/users/upload-docs" method="POST" enctype="multipart/form-data" class="upload-form">
+
+        <!-- GOV ID -->
+        <div class="form-group">
+          <label>Gov ID (Aadhaar / Passport)</label>
+
+          <% if (user.govIdFile) { %>
+            <p class="current-doc">Current: <a href="<%= user.govIdFile %>" target="_blank">View Gov ID</a></p>
+          <% } %>
+
+          <input type="file" name="govIdFile" accept="image/*,application/pdf" class="file-input" />
+        </div>
+
+        <!-- DRIVING LICENSE -->
+        <div class="form-group">
+          <label>Driving License</label>
+
+          <% if (user.drivingLicenseFile) { %>
+            <p class="current-doc">Current: <a href="<%= user.drivingLicenseFile %>" target="_blank">View Driving License</a></p>
+          <% } %>
+
+          <input type="file" name="drivingLicenseFile" accept="image/*,application/pdf" class="file-input" />
+        </div>
+
+        <button class="btn upload-button" type="submit">Upload Documents</button>
+      </form>
+    </div>
+
+    <!-- ADDITIONAL INFO -->
+    <div class="card-section additional-info">
+      <h3 class="section-title">Contact & Security</h3>
+      
+      <div class="info-row">
+        <p><strong>Role:</strong> <%= user.role %></p>
+      </div>
+      <div class="info-row">
+        <p><strong>Account ID:</strong> <span id="accountId"></span></p>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Avatar upload + local preview
+  function handleAvatarUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        document.getElementById('userAvatar').src = e.target.result;
+        localStorage.setItem('userAvatar', e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function loadSavedAvatar() {
+    const saved = localStorage.getItem('userAvatar');
+    if (saved) {
+      document.getElementById('userAvatar').src = saved;
+    }
+  }
+
+  function generateRandomId() {
+    return 'UID-' + Math.random().toString(16).substring(2, 9).toUpperCase();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('accountId').textContent = generateRandomId();
+    loadSavedAvatar();
+  });
+</script>
+
+<%- include('../partials/footer') %>

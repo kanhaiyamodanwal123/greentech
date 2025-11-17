@@ -1,0 +1,264 @@
+<%- include('../partials/header') %>
+
+<div class="container owner-dashboard-wrapper">
+  <h1>Welcome, <%= user ? user.name : 'Owner' %></h1>
+
+  <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+    <p class="alert alert-success"><%= success_msg %></p>
+  <% } %>
+  <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+    <p class="alert alert-danger"><%= error_msg %></p>
+  <% } %>
+
+  <section class="my-vehicles-section">
+    <h2>My Listed Vehicles</h2>
+    <p class="section-subtitle">Manage your listings and check their verification status.</p>
+    <a href="/vehicles/add" class="btn btn-primary add-vehicle-btn">➕ Add New Vehicle</a>
+    
+    <% if (vehicles && vehicles.length > 0) { %>
+      <div class="vehicle-listing-grid">
+        <% vehicles.forEach(vehicle => { %>
+          <div class="vehicle-card-owner">
+            <div class="vehicle-card-image">
+
+                <!-- CLOUDINARY FIX: Use full URL -->
+                <% if (vehicle.images && vehicle.images.length > 0) { %>
+                    <img src="<%= vehicle.images[0] %>" alt="<%= vehicle.title %>" />
+                <% } else { %>
+                    <div class="image-placeholder-sm">No Image</div>
+                <% } %>
+
+            </div>
+
+            <div class="vehicle-card-content">
+                <h3 class="vehicle-title-sm"><%= vehicle.title %></h3>
+
+                <p class="text-xs text-gray-500 mb-1">
+                    <span class="text-indigo-600">📍</span> <%= vehicle.location || 'N/A' %>
+                </p>
+                
+                <p class="price-info">₹<%= vehicle.pricePerDay %> / day</p>
+
+                <% 
+                    let statusClass;
+                    let statusText;
+                    
+                    if (vehicle.isVerified) {
+                        statusClass = 'status-approved';
+                        statusText = '✅ Verified & Listed';
+                    } else if (vehicle.rcFile || vehicle.insuranceFile || vehicle.pollutionFile) {
+                        statusClass = 'status-pending';
+                        statusText = '⏳ Pending Admin Review';
+                    } else {
+                        statusClass = 'status-rejected';
+                        statusText = '❌ Verification Failed / Docs Missing';
+                    }
+                %>
+
+                <span class="verification-status <%= statusClass %>"><%= statusText %></span>
+            </div>
+
+            <div class="vehicle-card-actions">
+                <a href="/vehicles/edit/<%= vehicle._id %>" class="btn btn-action edit-btn">Edit Details</a>
+
+                <% if (statusClass === 'status-rejected') { %>
+                    <a href="/vehicles/edit/<%= vehicle._id %>#documents" class="btn btn-action reupload-btn">Re-upload Docs</a>
+                <% } %>
+            </div>
+
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <p class="no-vehicles-message">You have not added any vehicles yet.</p>
+    <% } %>
+  </section>
+
+  ---
+  
+  <section class="booking-requests-section">
+    <h2>Booking Requests</h2>
+
+    <% if (bookingRequests && bookingRequests.length > 0) { %>
+      <div class="booking-cards-grid">
+        <% bookingRequests.forEach(booking => { %>
+          <div class="booking-card">
+            <div class="booking-info">
+              <h3><%= booking.vehicle ? booking.vehicle.title : 'Deleted Vehicle' %></h3>
+              <p><strong>Renter:</strong> <%= booking.renter ? booking.renter.name : 'Unknown' %></p>
+              <p><strong>Dates:</strong> 
+                <%= new Date(booking.startDate).toDateString() %> -
+                <%= new Date(booking.endDate).toDateString() %>
+              </p>
+              <p><strong>Total Amount:</strong> ₹<%= booking.totalAmount %></p>
+              <p><strong>Status:</strong> 
+                 <span class="status <%= booking.status.toLowerCase() %>"><%= booking.status %></span>
+              </p>
+            </div>
+
+            <div class="booking-actions">
+  <% if (booking.status === 'pending') { %>
+
+    <form action="/bookings/<%= booking._id %>/accept" method="POST" style="display:inline;">
+      <button class="btn btn-accept" type="submit">Accept</button>
+    </form>
+
+    <form action="/bookings/<%= booking._id %>/reject" method="POST" style="display:inline;">
+      <button class="btn btn-reject" type="submit">Reject</button>
+    </form>
+
+  <% } else { %>
+    <em class="action-status">No actions available</em>
+  <% } %>
+</div>
+
+
+          </div>
+        <% }) %>
+      </div>
+
+    <% } else { %>
+      <p class="no-bookings">No booking requests yet.</p>
+    <% } %>
+  </section>
+
+</div>
+
+
+
+<style>
+    .owner-dashboard-wrapper {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+    .section-subtitle {
+        color: #6c757d;
+        margin-bottom: 20px;
+    }
+    .add-vehicle-btn {
+        margin-bottom: 20px;
+    }
+    .vehicle-listing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+    .vehicle-card-owner {
+        display: flex;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        overflow: hidden;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .vehicle-card-image {
+        width: 120px;
+        height: 120px;
+        flex-shrink: 0;
+        background-color: #f0f0f0;
+    }
+    .vehicle-card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .image-placeholder-sm {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        color: #aaa;
+        font-size: 0.9em;
+    }
+    .vehicle-card-content {
+        padding: 10px 15px;
+        flex-grow: 1;
+    }
+    .vehicle-title-sm {
+        margin: 0 0 5px 0;
+        font-size: 1.1em;
+        color: #343a40;
+    }
+    .price-info {
+        font-weight: 600;
+        color: #28a745;
+        margin: 0 0 10px 0;
+    }
+    .verification-status {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.85em;
+        font-weight: bold;
+    }
+    .status-approved { background-color: #d4edda; color: #155724; }
+    .status-pending { background-color: #fff3cd; color: #856404; }
+    .status-rejected { background-color: #f8d7da; color: #721c24; }
+
+    .vehicle-card-actions {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 5px;
+        background-color: #f8f9fa;
+        border-left: 1px solid #e9ecef;
+    }
+    .btn-action {
+        text-decoration: none;
+        padding: 6px 10px;
+        margin: 3px 0;
+        border-radius: 4px;
+        font-size: 0.85em;
+        text-align: center;
+        transition: background-color 0.2s;
+        border: 1px solid transparent;
+    }
+    .edit-btn {
+        background-color: #007bff;
+        color: white;
+    }
+    .reupload-btn {
+        background-color: #ffc107;
+        color: #343a40;
+    }
+    
+    /* Booking Request Styles */
+    .booking-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 15px;
+    }
+    .booking-card {
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        padding: 15px;
+        background-color: #fff;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .booking-card h3 {
+        font-size: 1.1em;
+        margin-top: 0;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 5px;
+    }
+    .booking-actions {
+        margin-top: 10px;
+    }
+    .btn-accept, .btn-reject {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+        margin-right: 10px;
+    }
+    .btn-accept { background-color: #28a745; color: white; }
+    .btn-reject { background-color: #dc3545; color: white; }
+    .action-status { color: #6c757d; font-style: italic; font-size: 0.9em; }
+</style>
+
+<%- include('../partials/footer') %>

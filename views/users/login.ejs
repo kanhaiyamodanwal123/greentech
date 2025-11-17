@@ -1,0 +1,31 @@
+<%- include('../partials/header') %>
+
+<section class="signup-page full-bleed">
+  <div class="signup-overlay">
+    <div class="signup-card glass-box">
+      <h2 class="signup-heading">Welcome Back!</h2>
+      <br><br>
+      
+<form action="/users/login" method="POST" class="signup-form">
+  <div class="signup-row">
+      <label for="email">Email Address</label>
+      <input id="email" name="email" type="email" placeholder="Enter your email" required />
+
+    </div>
+ <div class="signup-row">
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" placeholder="Enter password" required />
+    </div>
+    <br>
+  <button type="submit" class="signup-btn">Login</button>
+</form>
+<p class="signup-footer">
+    create new account<a href="/users/register">Sign up here</a>
+  </p><br><br>
+      <br><br><br>
+</div>
+  </div>
+  
+</section>
+
+<%- include('../partials/footer') %>

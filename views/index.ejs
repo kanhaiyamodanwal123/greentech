@@ -1,0 +1,289 @@
+<%- include('partials/header', { title: 'Home - GreenTech Ride' }) %>
+
+<%
+  // Cloudinary base URL
+  const CDN = "https://res.cloudinary.com/do45ldwvm/image/upload";
+%>
+
+<!-- Custom Modal Styles -->
+<style>
+  .location-modal-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.75);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 1000;
+  }
+  .location-modal-content {
+    background: #ffffff; padding: 30px; border-radius: 12px;
+    width: 90%; max-width: 450px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    animation: fadeIn 0.3s ease-out;
+  }
+  .modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px; border-bottom: 2px solid #e9ecef; padding-bottom: 10px;
+  }
+  .modal-header h3 { font-size: 1.5rem; font-weight: 700; color: #343a40; }
+  .close-btn { cursor: pointer; font-size: 2rem; color: #6c757d; transition: .2s; }
+  .close-btn:hover { color: #007bff; }
+
+  #locationSearchInput {
+    width: 100%; padding: 12px; border: 2px solid #ced4da; border-radius: 8px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); font-size: 1.1rem;
+  }
+  #locationSearchInput:focus { border-color: #007bff; outline: none; }
+
+  .search-disclaimer { 
+    font-size: .85rem; color: #6c757d; margin-top: 15px; text-align: center; 
+    border-top: 1px solid #f8f9fa; padding-top: 10px;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+</style>
+
+<!-- HERO -->
+<section class="hero-section">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <small class="eyebrow">Two Wheelers Rentals</small>
+      <h1 class="hero-title">Freedom To Move</h1>
+      <p class="hero-sub">Presenting the safe, reliable and affordable mobility solution</p>
+
+      <!-- Search Card -->
+      <div class="search-card">
+        <form action="/vehicles" method="GET" class="search-form">
+          <div class="search-left">
+            <input type="hidden" name="location" id="searchLocationInput" value="Bengaluru" />
+
+            <button class="loc-btn" type="button" onclick="showLocationModal()">
+              <img src="/uploads/placeholder.png" alt="loc" /> 
+              <span class="loc-text" id="visibleLocationText">Bengaluru</span>
+            </button>
+          </div>
+
+          <div class="search-mid">
+            <input type="date" name="startDate" class="search-input" />
+            <input type="date" name="endDate" class="search-input" />
+          </div>
+
+          <button class="search-submit" type="submit" title="Search" style="background:white;">
+            <img src="/uploads/magnifying-glass.png" alt="search" />
+          </button>
+        </form>
+      </div>
+
+      <!-- Location Modal -->
+      <div id="locationModal" class="location-modal-overlay" style="display:none;">
+        <div class="location-modal-content">
+          <div class="modal-header">
+            <h3>Select Pickup Location</h3>
+            <span class="close-btn" onclick="closeLocationModal()">&times;</span>
+          </div>
+
+          <input type="text" id="locationSearchInput" placeholder="Type location (e.g., Koramangala)" />
+
+          <div id="locationSuggestions" style="display:none;"></div>
+
+          <p class="search-disclaimer">Press Enter to search for your location.</p>
+        </div>
+      </div>
+
+      <!-- CTA Buttons -->
+      <div class="hero-cta">
+        <a href="/vehicles" class="btn btn-primary">Browse All Vehicles</a>
+        <% if (user && user.role && user.role.toLowerCase() === 'owner') { %>
+          <a href="/vehicles/add" class="btn btn-primary">List Your Bike</a>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- RIGHT HERO SLIDER -->
+    <div class="hero-right">
+      <div class="promo-carousel" id="promoCarousel" data-autoplay="true">
+        <div class="promo-slide" style="background-image:url('/uploads/Banner_Test_f93a7e93e2.png')"></div>
+        <div class="promo-slide" style="background-image:url('/uploads/New_Refer_and_Earn_offer_2f8db25475.webp')"></div>
+        <div class="promo-dots" id="promoDots"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL FLOATING BUTTONS -->
+<div class="floating-social">
+  <a href="#" target="_blank" class="social"><img src="/uploads/social.png"></a>
+  <a href="#" target="_blank" class="social"><img src="/uploads/communication.png"></a>
+  <a href="#" target="_blank" class="social"><img src="/uploads/instagram.png"></a>
+  <a href="#" target="_blank" class="social"><img src="/uploads/linkedin.png"></a>
+</div>
+
+<!-- OWNER DASHBOARD OR FLEET VIEW -->
+<% if (user && user.role.toLowerCase() === "owner") { %>
+
+<section class="owner-dashboard container-1200">
+  <h2>Your Vehicles</h2>
+
+  <% if (vehicles && vehicles.length > 0) { %>
+  <div class="vehicle-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" style="width:40px;">
+
+    <% vehicles.forEach(vehicle => { %>
+    <div class="vehicle-card owner-card">
+      <div class="card-media">
+        <img src="<%= vehicle.images && vehicle.images.length ? vehicle.images[0] : CDN + '/static/placeholder-vehicle.png' %>" alt="<%= vehicle.title %>">
+
+        <% if (vehicle.type === 'ev') { %>
+          <span class="badge ev">EV</span>
+        <% } else { %>
+          <span class="badge bike">Bike</span>
+        <% } %>
+
+        <div class="price-tag">₹<%= vehicle.pricePerDay %>/day</div>
+      </div>
+
+      <div class="card-body">
+        <h3 class="vehicle-title"><%= vehicle.title %></h3>
+        <p class="vehicle-location"><span>📍</span> <%= vehicle.location || "N/A" %></p>
+        <p class="vehicle-desc"><%= vehicle.description %></p>
+
+        <div class="card-meta">
+          <span><strong>Year:</strong> <%= vehicle.modelYear %></span>
+          <span><img src="<%= CDN %>/static/icon-mileage.svg"> <%= vehicle.mileage %> kmpl</span>
+        </div>
+
+        <div class="card-actions">
+          <a href="/vehicles/edit/<%= vehicle._id %>" class="btn btn-sm btn-outline">Edit</a>
+          <form action="/vehicles/delete/<%= vehicle._id %>" method="POST" style="display:inline;">
+            <button class="btn btn-sm btn-danger" onclick="return confirm('Delete this vehicle?')">Delete</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <% }) %>
+
+  </div>
+
+  <% } else { %>
+    <p>You haven’t listed any vehicles yet.</p>
+  <% } %>
+</section>
+
+<% } else { %>
+
+<!-- RENTER VIEW -->
+<section class="fleet-section container-1300">
+  <div class="fleet-header"><h2>Renting Fleet</h2></div>
+
+  <div class="fleet-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+    <% if (vehicles && vehicles.length) { %>
+
+      <% vehicles.forEach(v => { %>
+      <div class="vehicle-card">
+        <div class="card-media">
+          <img src="<%= v.images && v.images.length ? v.images[0] : CDN + '/static/placeholder-vehicle.png' %>" alt="<%= v.title %>">
+
+          <% if (v.type === 'ev') { %>
+            <span class="badge ev">EV</span>
+          <% } else { %>
+            <span class="badge bike">Bike</span>
+          <% } %>
+
+          <div class="price-tag">₹<%= v.pricePerDay %>/day</div>
+        </div>
+
+        <div class="card-body">
+          <h3 class="vehicle-title"><%= v.title %></h3>
+          <p class="vehicle-location"><span>📍</span> <%= v.location || 'N/A' %></p>
+          
+          <p class="vehicle-desc">
+            <%= v.description ? (v.description.length > 90 ? v.description.substring(0,90) + '...' : v.description) : '' %>
+          </p>
+
+          <div class="card-meta">
+            <span><img src="<%= CDN %>/static/icon-calendar.svg"> <%= v.modelYear %></span>
+            <span><img src="<%= CDN %>/static/icon-mileage.svg"> <%= v.mileage %> kmpl</span>
+          </div>
+
+          <div class="meta-right">
+            <% if (user) { %>
+              <a class="btn btn-primary" href="/vehicles/<%= v._id %>">Book Now</a>
+            <% } else { %>
+              <a class="btn btn-primary" href="/users/login">Login to Book</a>
+            <% } %>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+
+    <% } else { %>
+      <div>No vehicles found.</div>
+    <% } %>
+
+  </div>
+</section>
+
+<% } %>
+
+<!-- STATS SECTION -->
+<section class="stats-and-faq-section">
+  <div class="stats-container">
+    <div class="stats-item"><div class="stat-number">6,500</div><div class="stat-description">Total Two-Wheelers</div></div>
+    <div class="stats-item"><div class="stat-number">900,000+</div><div class="stat-description">App Downloads</div></div>
+    <div class="stats-item"><div class="stat-number">60,000,000+</div><div class="stat-description">KMs Driven</div></div>
+    <div class="stats-item"><div class="stat-number">19+</div><div class="stat-description">Total Locations</div></div>
+  </div>
+
+  <div class="image-container">
+    <img src="/uploads/counter-right-img.be2655085af306aa893f.jpg" alt="Bike Image">
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="faq-container">
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-question"><p>How can I rent a two-wheeler online?</p><span>+</span></div>
+      <div class="faq-answer"><p>Select location → choose vehicle → book → ride.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question"><p>What is the condition of the vehicles?</p><span>+</span></div>
+      <div class="faq-answer"><p>All vehicles are well maintained and serviced regularly.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question"><p>Do I need to pay a security deposit?</p><span>+</span></div>
+      <div class="faq-answer"><p>Yes, refundable security deposit is applicable.</p></div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  function showLocationModal() {
+    document.getElementById('locationModal').style.display = 'flex';
+    const searchInput = document.getElementById('locationSearchInput');
+    searchInput.value = '';
+    searchInput.focus();
+  }
+  function closeLocationModal() {
+    document.getElementById('locationModal').style.display = 'none';
+  }
+  document.getElementById('locationSearchInput').addEventListener('keyup', function(e) {
+    if (e.key === 'Enter' && this.value.trim()) {
+      document.getElementById('searchLocationInput').value = this.value.trim();
+      document.getElementById('visibleLocationText').textContent = this.value.trim();
+      document.querySelector('.search-form').submit();
+    }
+  });
+  window.onclick = function(event) {
+    const modal = document.getElementById('locationModal');
+    if (event.target === modal) closeLocationModal();
+  }
+</script>
+
+<%- include('partials/footer') %>

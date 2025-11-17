@@ -1,0 +1,162 @@
+<!-- views/bookings/myBookings.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Bookings</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <div class="booking-list-container">
+  <header class="list-header">
+    <h1 class="main-title">My Bookings</h1>
+    <p class="sub-title">Manage and track the status of all your vehicle reservations.</p>
+  </header>
+
+  <div class="bookings-grid">
+    <% if (bookings && bookings.length > 0) { %>
+      <% bookings.forEach(booking => { %>
+        <div class="booking-card-item" data-booking-id="<%= booking._id %>">
+          
+          <!-- VEHICLE SUMMARY -->
+          <div class="bike-summary-section">
+            <div class="bike-image-box">
+              <% if (booking.vehicle && booking.vehicle.images && booking.vehicle.images.length > 0) { %>
+                <img src="<%= booking.vehicle.images[0] %>" 
+                     alt="<%= booking.vehicle.title %>" 
+                     class="booking-bike-image" />
+              <% } else { %>
+                <img src="https://placehold.co/300x200?text=No+Image" 
+                     class="booking-bike-image" />
+              <% } %>
+            </div>
+            
+            <div class="bike-details-group">
+              <h3 class="bike-title-list">
+                <%= booking.vehicle ? booking.vehicle.title : 'Vehicle Removed' %>
+              </h3>
+              <p class="owner-name">Owner: <%= booking.vehicle?.owner?.name || 'Unknown' %></p>
+            </div>
+          </div>
+
+          <!-- BOOKING SUMMARY -->
+          <div class="booking-details-group">
+            <div class="detail-row">
+              <span class="detail-label">Start Date:</span>
+              <span class="detail-value date"><%= new Date(booking.startDate).toDateString() %></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">End Date:</span>
+              <span class="detail-value date"><%= new Date(booking.endDate).toDateString() %></span>
+            </div>
+            <div class="detail-row total-row">
+              <span class="detail-label">Total Amount:</span>
+              <span class="detail-value price">₹<%= booking.totalAmount %></span>
+            </div>
+          </div>
+
+          <!-- STATUS SUMMARY -->
+          <div class="booking-status-group">
+            <% 
+              let statusClass, statusText;
+              if (booking.status === 'pending') {
+                statusClass = 'status-pending';
+                statusText = '⏳ Pending Owner Approval';
+              } else if (booking.status === 'accepted') {
+                statusClass = 'status-accepted';
+                statusText = '✅ Accepted';
+              } else if (booking.status === 'rejected') {
+                statusClass = 'status-rejected';
+                statusText = '❌ Rejected';
+              } else if (booking.status === 'completed') {
+                statusClass = 'status-completed';
+                statusText = '✔ Completed';
+              } else {
+                statusClass = 'status-default';
+                statusText = 'Unknown Status';
+              }
+            %>
+
+            <span class="status-badge <%= statusClass %>"><%= statusText %></span>
+
+            <div class="view-details-btn" onclick="toggleDetails(this, '<%= booking._id %>')">
+              View Details 
+              <span class="toggle-icon">→</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- EXPANDED DETAILS -->
+        <div class="expanded-details" id="details-<%= booking._id %>">
+          <div class="detail-column">
+            <h4>Vehicle Information</h4>
+            <p><strong>Bike Name:</strong> <%= booking.vehicle?.title || 'N/A' %></p>
+            <p><strong>Model Year:</strong> <%= booking.vehicle?.modelYear || 'N/A' %></p>
+            <p><strong>Vehicle Type:</strong> <%= booking.vehicle?.type || 'N/A' %></p>
+            <p><strong>Description:</strong> 
+              <%= booking.vehicle?.description 
+                    ? booking.vehicle.description.substring(0, 100) + '...' 
+                    : 'No description available' %>
+            </p>
+          </div>
+
+          <div class="detail-column">
+            <h4>Rental & Owner Details</h4>
+            <p><strong>Renter:</strong> <%= user.name %> (You)</p>
+            <p><strong>Owner:</strong> <%= booking.vehicle?.owner?.name || 'Unknown' %></p>
+            <p><strong>Renter Contact:</strong> <%= user.email %></p>
+            <p><strong>Rental Period:</strong> 
+              <%= new Date(booking.startDate).toLocaleDateString() %> -
+              <%= new Date(booking.endDate).toLocaleDateString() %>
+            </p>
+            <p><strong>Total Paid:</strong> ₹<%= booking.totalAmount %></p>
+          </div>
+
+          <div class="detail-column status-info">
+            <h4>Status Explanation</h4>
+            <p class="current-status-message">
+              Current Status: <span class="status-badge <%= statusClass %>"><%= statusText %></span>
+            </p>
+            <p class="status-explanation">
+              <% if (booking.status === 'pending') { %>
+                Awaiting approval from the owner.
+              <% } else if (booking.status === 'accepted') { %>
+                Booking confirmed! Contact the owner for pickup details.
+              <% } else if (booking.status === 'rejected') { %>
+                This booking was declined. Try booking another vehicle.
+              <% } else if (booking.status === 'completed') { %>
+                Your rental has successfully completed.
+              <% } %>
+            </p>
+          </div>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p class="no-bookings-message">
+        You haven’t made any bookings yet.  
+        <a href="/vehicles">Browse Vehicles</a>
+      </p>
+    <% } %>
+  </div>
+</div>
+
+<script>
+  function toggleDetails(element, id) {
+    const div = document.getElementById('details-' + id);
+    const icon = element.querySelector('.toggle-icon');
+
+    if (div.style.maxHeight) {
+      div.style.maxHeight = null;
+      icon.innerHTML = "→";
+    } else {
+      div.style.maxHeight = div.scrollHeight + "px";
+      icon.innerHTML = "↓";
+    }
+  }
+</script>
+
+<%- include('../partials/footer') %>
+</body>
+</html>

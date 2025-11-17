@@ -1,0 +1,152 @@
+<%- include('../partials/header') %>
+
+<div class="vehicle-form-wrapper">
+  <h2>Add a Vehicle</h2>
+
+  <form action="/vehicles/add" method="POST" enctype="multipart/form-data" class="vehicle-form-layout">
+    
+    <!-- VEHICLE DETAILS -->
+    <div class="form-section-details">
+      <h3>Vehicle Details</h3>
+
+      <div class="vehicle-input-group">
+        <label for="title">Title</label>
+        <input name="title" id="title" type="text" placeholder="e.g., 2023 Royal Enfield" required />
+      </div>
+
+      <div class="vehicle-input-group">
+        <label for="location">Pickup Location</label>
+        <input name="location" id="location" type="text" placeholder="e.g., Koramangala, Bengaluru" required />
+      </div>
+      
+      <div class="vehicle-input-group">
+        <label for="type">Type</label>
+        <select name="type" id="type" required>
+            <option value="bike">Bike</option>
+            <option value="scooter">Scooter</option>
+            <option value="ev">EV (Electric Vehicle)</option>
+        </select>
+      </div>
+
+      <div class="vehicle-input-group full-width">
+        <label for="description">Description</label>
+        <textarea name="description" id="description" placeholder="Describe the condition, features, etc."></textarea>
+      </div>
+    </div>
+
+    <!-- PRICING -->
+    <div class="form-section-pricing">
+      <h3>Pricing & Availability</h3>
+
+      <div class="vehicle-input-group">
+        <label for="modelYear">Model Year</label>
+        <input name="modelYear" id="modelYear" type="number" placeholder="e.g., 2023" />
+      </div>
+
+      <div class="vehicle-input-group">
+        <label for="mileage">Mileage (km)</label>
+        <input name="mileage" id="mileage" type="number" placeholder="e.g., 15000" />
+      </div>
+
+      <div class="vehicle-input-group">
+        <label for="pricePerDay">Price/Day (₹)</label>
+        <input name="pricePerDay" id="pricePerDay" type="number" required placeholder="e.g., 750" />
+      </div>
+
+      <div class="vehicle-input-group">
+        <label for="pricePerWeek">Price/Week (₹)</label>
+        <input name="pricePerWeek" id="pricePerWeek" type="number" placeholder="e.g., 4500" />
+      </div>
+
+      <div class="vehicle-input-group">
+        <label for="pricePerMonth">Price/Month (₹)</label>
+        <input name="pricePerMonth" id="pricePerMonth" type="number" placeholder="e.g., 15000" />
+      </div>
+    </div>
+
+    <!-- DOCUMENTS -->
+    <div class="form-section-documents full-width">
+      <h3>Mandatory Documents</h3>
+      <p class="field-help-text">Upload clear photos of the following documents.</p>
+
+      <div class="document-input-grid">
+
+        <div class="vehicle-input-group">
+          <label for="rcFile">Registration Certificate (RC)</label>
+          <input name="rcFile" id="rcFile" type="file" accept="image/*" required />
+        </div>
+
+        <div class="vehicle-input-group">
+          <label for="insuranceFile">Insurance Certificate</label>
+          <input name="insuranceFile" id="insuranceFile" type="file" accept="image/*" required />
+        </div>
+
+        <div class="vehicle-input-group">
+          <label for="pollutionFile">Pollution Certificate (PUC)</label>
+          <input name="pollutionFile" id="pollutionFile" type="file" accept="image/*" required />
+        </div>
+
+      </div>
+    </div>
+
+    <!-- IMAGES -->
+    <div class="form-section-images full-width">
+      <h3>Vehicle Images</h3>
+
+      <div class="vehicle-input-group full-width">
+        <label for="images">Upload Exterior Images</label>
+        <p class="field-help-text">Upload up to 6 clear images of the vehicle.</p>
+        
+        <!-- IMPORTANT: Must match multer field config -->
+        <input name="images" id="images" type="file" multiple accept="image/*" required />
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="form-action-buttons full-width">
+      <button class="action-btn-primary" type="submit">Submit Vehicle for Review</button>
+    </div>
+
+  </form>
+</div>
+
+<style>
+  .vehicle-form-wrapper {
+    max-width: 800px; margin: 40px auto;
+    padding: 30px; background: #f8f9fa;
+    border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  h2 { color: #343a40; border-bottom: 2px solid #007bff; padding-bottom: 10px; margin-bottom: 25px; }
+  .vehicle-form-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  .form-section-details,
+  .form-section-pricing,
+  .form-section-documents,
+  .form-section-images {
+    background: white; padding: 15px;
+    border: 1px solid #e9ecef; border-radius: 8px;
+  }
+  .form-section-pricing { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+  .vehicle-input-group label { font-weight: 600; margin-bottom: 5px; display: block; }
+  .vehicle-input-group input, 
+  .vehicle-input-group select, 
+  .vehicle-input-group textarea {
+    width: 100%; padding: 10px;
+    border: 1px solid #ced4da; border-radius: 4px;
+    font-size: 1em; box-sizing: border-box;
+  }
+  .vehicle-input-group textarea { min-height: 100px; }
+
+  .document-input-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+  .full-width { grid-column: 1 / -1; }
+
+  .action-btn-primary {
+    padding: 12px 25px; font-size: 1.1em;
+    border-radius: 5px; cursor: pointer;
+    background: #28a745; color: white; border: none;
+  }
+  .action-btn-primary:hover { background: #218838; }
+</style>
+
+<%- include('../partials/footer') %>

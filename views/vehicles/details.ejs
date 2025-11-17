@@ -1,0 +1,62 @@
+<%- include('../partials/header') %>
+
+<div class="product-container">
+  <div class="product-image-section">
+    
+    <% if (vehicle.images && vehicle.images.length > 0) { %>
+      <!-- Use Cloudinary URL directly -->
+      <img src="<%= vehicle.images[0] %>" alt="Vehicle Image" class="main-image" />
+    <% } else { %>
+      <!-- Optional placeholder hosted on Cloudinary -->
+      <img src="https://res.cloudinary.com/do45ldwvm/image/upload/v_placeholder.png" alt="Vehicle Image" class="main-image" />
+    <% } %>
+    
+    <div class="vehicle-images-thumbnails">
+      <% vehicle.images.forEach(img => { %>
+        <img src="<%= img %>" alt="Vehicle thumbnail" class="thumbnail" />
+      <% }) %>
+    </div>
+  </div>
+
+  <div class="product-details-section">
+    <div class="product-header">
+      <div class="rating-info">
+        <span class="rating-value">4.8</span>
+        <span class="rating-text">Ratings & Reviews</span>
+        <span class="assured-badge">Assured</span>
+      </div>
+      <h2 class="vehicle-title"><%= vehicle.title %></h2>
+    </div>
+
+    <div class="product-price-block">
+      <span class="price-value">₹<%= vehicle.pricePerDay %></span>
+    </div>
+
+    <div class="vehicle-info-list">
+      <h3>Vehicle Details</h3>
+      <ul>
+        <li><strong>Location:</strong> <%= vehicle.location || 'N/A' %></li>
+        <li><strong>Type:</strong> <%= vehicle.type %></li>
+        <li><strong>Description:</strong> <%= vehicle.description %></li>
+        <li><strong>Model Year:</strong> <%= vehicle.modelYear %></li>
+        <li><strong>Owner:</strong> <%= vehicle.owner.name %></li>
+      </ul>
+    </div>
+
+    <!-- Booking button logic -->
+    <% if (user && user.role === 'renter') { %>
+      <form action="/bookings/checkout/<%= vehicle._id %>" method="POST">
+        <button class="btn btn-primary book-now-btn" type="submit">Book Now</button>
+      </form>
+
+    <% } else if (!user) { %>
+      <a class="btn btn-primary book-now-btn" href="/users/login">Login to Book</a>
+
+    <% } else { %>
+      <p class="text-gray-500">Owners cannot book vehicles.</p>
+    <% } %>
+
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

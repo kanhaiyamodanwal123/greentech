@@ -1,0 +1,201 @@
+<%- include('../partials/header') %>
+
+<div class="vehicle-form-wrapper">
+  <h2>Edit Vehicle: <%= vehicle.title %></h2>
+  
+  <form action="/vehicles/edit/<%= vehicle._id %>" method="POST" enctype="multipart/form-data" class="vehicle-form-layout">
+    
+    <!-- VEHICLE DETAILS -->
+    <div class="form-section-details">
+      <h3>Vehicle Details</h3>
+
+      <div class="vehicle-input-group">
+        <label for="title">Title</label>
+        <input name="title" id="title" type="text" value="<%= vehicle.title %>" required />
+      </div>
+
+      <div class="vehicle-input-group">
+        <label for="location">Pickup Location</label>
+        <input name="location" id="location" type="text" value="<%= vehicle.location %>" required />
+      </div>
+
+      <div class="vehicle-input-group">
+        <label for="type">Type</label>
+        <select name="type" id="type" required>
+          <option value="bike" <%= vehicle.type === 'bike' ? 'selected' : '' %>>Bike</option>
+          <option value="scooter" <%= vehicle.type === 'scooter' ? 'selected' : '' %>>Scooter</option>
+          <option value="ev" <%= vehicle.type === 'ev' ? 'selected' : '' %>>EV (Electric Vehicle)</option>
+        </select>
+      </div>
+
+      <div class="vehicle-input-group full-width">
+        <label for="description">Description</label>
+        <textarea name="description" id="description"><%= vehicle.description %></textarea>
+      </div>
+    </div>
+    
+    <!-- PRICING -->
+    <div class="form-section-pricing">
+      <h3>Pricing & Availability</h3>
+
+      <div class="vehicle-input-group">
+        <label for="modelYear">Model Year</label>
+        <input name="modelYear" id="modelYear" type="number" value="<%= vehicle.modelYear %>" />
+      </div>
+
+      <div class="vehicle-input-group">
+        <label for="mileage">Mileage (km)</label>
+        <input name="mileage" id="mileage" type="number" value="<%= vehicle.mileage %>" />
+      </div>
+
+      <div class="vehicle-input-group">
+        <label for="pricePerDay">Price/Day (₹)</label>
+        <input name="pricePerDay" id="pricePerDay" type="number" value="<%= vehicle.pricePerDay %>" required />
+      </div>
+
+      <div class="vehicle-input-group">
+        <label for="pricePerWeek">Price/Week (₹)</label>
+        <input name="pricePerWeek" id="pricePerWeek" type="number" value="<%= vehicle.pricePerWeek %>" />
+      </div>
+
+      <div class="vehicle-input-group">
+        <label for="pricePerMonth">Price/Month (₹)</label>
+        <input name="pricePerMonth" id="pricePerMonth" type="number" value="<%= vehicle.pricePerMonth %>" />
+      </div>
+    </div>
+
+    <!-- DOCUMENTS -->
+    <div class="form-section-documents full-width">
+      <h3>Mandatory Documents (Re-upload to update)</h3>
+      <p class="field-help-text">
+        Current status: <strong><%= vehicle.isVerified ? 'VERIFIED' : 'PENDING' %></strong><br>
+        Uploading new documents will require re-verification.
+      </p>
+
+      <div class="document-input-grid">
+
+        <!-- RC -->
+        <div class="vehicle-input-group">
+          <label>Registration Certificate (RC)</label>
+          <% if (vehicle.rcFile) { %>
+            <p class="current-doc-status">
+              Current File: <a href="<%= vehicle.rcFile %>" target="_blank">View RC</a>
+            </p>
+          <% } %>
+          <input name="rcFile" type="file" accept="image/*,application/pdf" />
+        </div>
+
+        <!-- Insurance -->
+        <div class="vehicle-input-group">
+          <label>Insurance Certificate</label>
+          <% if (vehicle.insuranceFile) { %>
+            <p class="current-doc-status">
+              Current File: <a href="<%= vehicle.insuranceFile %>" target="_blank">View Insurance</a>
+            </p>
+          <% } %>
+          <input name="insuranceFile" type="file" accept="image/*,application/pdf" />
+        </div>
+
+        <!-- PUC -->
+        <div class="vehicle-input-group">
+          <label>Pollution Certificate (PUC)</label>
+          <% if (vehicle.pollutionFile) { %>
+            <p class="current-doc-status">
+              Current File: <a href="<%= vehicle.pollutionFile %>" target="_blank">View PUC</a>
+            </p>
+          <% } %>
+          <input name="pollutionFile" type="file" accept="image/*,application/pdf" />
+        </div>
+
+      </div>
+    </div>
+    
+    <!-- IMAGES -->
+    <div class="form-section-images full-width">
+      <h3>Vehicle Images</h3>
+
+      <div class="vehicle-input-group full-width">
+        <p class="field-help-text">
+          <strong><%= vehicle.images.length %></strong> images uploaded.
+          Uploading new images will replace all existing ones.
+        </p>
+
+        <div class="current-images-preview">
+          <% vehicle.images.forEach(img => { %>
+            <img src="<%= img %>" class="preview-thumb" alt="Vehicle image preview" />
+          <% }) %>
+        </div>
+
+        <label for="images">Replace Images</label>
+        <input name="images" id="images" type="file" multiple />
+      </div>
+    </div>
+
+    <div class="form-action-buttons full-width">
+      <button class="action-btn action-btn-primary" type="submit">Save Changes</button>
+    </div>
+
+  </form>
+</div>
+
+<style>
+  .vehicle-form-wrapper {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  h2 {
+    color: #343a40; border-bottom: 2px solid #007bff;
+    padding-bottom: 10px; margin-bottom: 25px;
+  }
+  .vehicle-form-layout {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+  }
+  .form-section-details,
+  .form-section-pricing,
+  .form-section-images,
+  .form-section-documents {
+    padding: 15px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    background-color: white;
+  }
+  .form-section-pricing {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+  }
+  .vehicle-input-group label {
+    font-weight: 600; margin-bottom: 5px; color: #495057;
+  }
+  .vehicle-input-group input,
+  .vehicle-input-group select,
+  .vehicle-input-group textarea {
+    width: 100%; padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1em;
+  }
+  .current-doc-status {
+    font-size: 0.9em; color: #28a745;
+  }
+  .preview-thumb {
+    width: 80px; height: 60px;
+    object-fit: cover;
+    margin-right: 8px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+  }
+  .action-btn-primary {
+    background-color: #007bff; color: white;
+    padding: 12px 25px; border-radius: 5px;
+    width: 100%; font-size: 1.1em;
+  }
+  .action-btn-primary:hover { background-color: #0056b3; }
+  .full-width { grid-column: 1 / -1; }
+</style>
+
+<%- include('../partials/footer') %>

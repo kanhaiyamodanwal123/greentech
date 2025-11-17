@@ -1,0 +1,76 @@
+<%- include('partials/header', { title: 'Partner With Us - GreenTech Ride' }) %>
+
+<main class="container-1300 mx-auto px-4 py-12 sm:py-20">
+    <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 text-center mb-6">
+        Partner With GreenTech Ride
+    </h1>
+    <p class="text-xl text-gray-600 text-center max-w-4xl mx-auto mb-16">
+        Whether you are an individual bike owner looking to earn passive income or a business seeking mobility solutions, we offer flexible and rewarding partnerships.
+    </p>
+
+    <!-- 1. Section for Bike Owners -->
+    <section class="mb-16 bg-indigo-50 p-8 rounded-xl shadow-lg">
+        <h2 class="text-3xl font-bold text-indigo-700 mb-6 text-center">
+            For Bike Owners: List Your Vehicle & Earn
+        </h2>
+        <div class="grid md:grid-cols-3 gap-8 text-center">
+            
+            <!-- Benefit 1 -->
+            <div class="p-6 bg-white rounded-lg shadow-md">
+                <div class="text-4xl text-green-600 mb-3">💰</div>
+                <h3 class="text-xl font-semibold mb-2">Maximize Earnings</h3>
+                <p class="text-gray-600">Earn income from your bike when you're not riding it. We handle the rental process seamlessly.</p>
+            </div>
+            
+            <!-- Benefit 2 -->
+            <div class="p-6 bg-white rounded-lg shadow-md">
+                <div class="text-4xl text-indigo-600 mb-3">🛡️</div>
+                <h3 class="text-xl font-semibold mb-2">Safety & Insurance</h3>
+                <p class="text-gray-600">Rest easy knowing your vehicle is covered under our comprehensive safety and insurance policy.</p>
+            </div>
+            
+            <!-- Benefit 3 -->
+            <div class="p-6 bg-white rounded-lg shadow-md">
+                <div class="text-4xl text-yellow-600 mb-3">🛠️</div>
+                <h3 class="text-xl font-semibold mb-2">Hassle-Free Management</h3>
+                <p class="text-gray-600">We manage bookings, payments, and renter verification. Just approve the request!</p>
+            </div>
+        </div>
+
+        <div class="text-center mt-10">
+            <h4 class="text-xl font-bold mb-4">Ready to get started?</h4>
+            <!-- Assumes /vehicles/add is the route for owners to list a vehicle -->
+            <a href="/vehicles/add" class="inline-block bg-indigo-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-indigo-700 transition duration-300">
+                List Your Bike Now
+            </a>
+        </div>
+    </section>
+
+    <!-- 2. Section for Business Partnerships (B2B) -->
+    <section class="mb-16">
+        <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">
+            For Businesses & Fleet Operators
+        </h2>
+        <div class="max-w-4xl mx-auto text-center">
+            <p class="text-lg text-gray-700 mb-6">
+                We partner with corporate offices, logistics companies, and other fleet managers to provide dedicated, scalable mobility solutions.
+            </p>
+            <ul class="text-left space-y-3 text-gray-700 list-disc list-inside inline-block">
+                <li>**Corporate Rentals:** Long-term rental plans for employee commute.</li>
+                <li>**Fleet Integration:** Integrate our rental system into your existing service.</li>
+                <li>**Custom Mobility Zones:** Set up dedicated pickup/drop-off points for your organization.</li>
+            </ul>
+        </div>
+        
+        <div class="text-center mt-10 p-6 border-2 border-gray-200 rounded-xl">
+            <h4 class="text-xl font-bold mb-3">Get in Touch</h4>
+            <p class="text-gray-600 mb-4">Discuss custom packages and enterprise pricing with our team.</p>
+            <!-- Placeholder for actual contact method -->
+            <a href="mailto:business@greentechride.com" class="inline-block bg-gray-800 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-700 transition duration-300">
+                Contact Business Team
+            </a>
+        </div>
+    </section>
+</main>
+
+<%- include('partials/footer') %>

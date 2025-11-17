@@ -1,0 +1,251 @@
+<%- include('../partials/header') %>
+
+<div class="admin-dashboard-container">
+  <header class="dashboard-header">
+    <h1 class="main-title">Admin Control Panel</h1>
+    <p class="sub-title">Manage users, vehicles, bookings, and financial operations.</p>
+  </header>
+  
+  <div class="dashboard-content">
+
+    <% 
+      let initialTabId = locals.initialTabId || 'user-verification'; 
+
+      // Mock fallback data (kept for preview mode)
+      if (!locals.unverifiedUsers) locals.unverifiedUsers = [];
+      if (!locals.unverifiedVehicles) locals.unverifiedVehicles = [];
+      if (!locals.recentBookings) locals.recentBookings = [];
+
+      const unverifiedUsers = locals.unverifiedUsers;
+      const recentBookings = locals.recentBookings;
+      const unverifiedVehicles = locals.unverifiedVehicles;
+    %>
+
+    <!-- Flash Messages -->
+    <% if (success_msg) { %>
+      <div class="alert alert-success"><%= success_msg %></div>
+    <% } %>
+    <% if (error_msg) { %>
+      <div class="alert alert-danger"><%= error_msg %></div>
+    <% } %>
+
+    <!-- Navigation Tabs -->
+    <nav class="dashboard-tabs">
+      <a href="#user-verification" class="tab-link <%= initialTabId === 'user-verification' ? 'active' : '' %>">
+        User Verification
+      </a>
+      <a href="#vehicle-verification" class="tab-link <%= initialTabId === 'vehicle-verification' ? 'active' : '' %>">
+        Vehicle Verification
+      </a>
+      <a href="#bookings" class="tab-link <%= initialTabId === 'bookings' ? 'active' : '' %>">
+        View Bookings
+      </a>
+      <a href="#payouts" class="tab-link <%= initialTabId === 'payouts' ? 'active' : '' %>">
+        Manage Payouts
+      </a>
+    </nav>
+
+    <!-- USER VERIFICATION -->
+    <div id="user-verification" class="tab-panel <%= initialTabId === 'user-verification' ? 'active' : '' %>">
+      <h3>Unverified Users (<%= unverifiedUsers.length %>)</h3>
+      <p class="panel-info">Review uploaded documents & verify accounts.</p>
+
+      <% if (unverifiedUsers.length > 0) { %>
+      <div class="verification-list">
+
+        <% unverifiedUsers.forEach(user => { %>
+        <div class="user-verification-card">
+
+          <div class="user-info-group">
+            <p><strong>Name:</strong> <%= user.name %></p>
+            <p><strong>Email:</strong> <%= user.email %></p>
+          </div>
+
+          <div class="document-info-group">
+            <p><strong>Gov ID:</strong> <%= user.govIdFile ? 'Uploaded ✔' : 'Missing ❌' %></p>
+            <% if (user.govIdFile) { %>
+              <a href="<%= user.govIdFile %>" target="_blank" class="btn btn-secondary action-btn">Review Gov ID</a>
+            <% } %>
+
+            <p style="margin-top:10px;"><strong>Driving License:</strong> 
+              <%= user.drivingLicenseFile ? 'Uploaded ✔' : 'Missing ❌' %>
+            </p>
+            <% if (user.drivingLicenseFile) { %>
+              <a href="<%= user.drivingLicenseFile %>" target="_blank" class="btn btn-secondary action-btn">Review DL</a>
+            <% } %>
+          </div>
+
+          <div class="action-buttons-group">
+            <form action="/admin/approve-user/<%= user._id %>" method="POST">
+              <button class="btn btn-approve" type="submit">Approve</button>
+            </form>
+            <form action="/admin/deny-user/<%= user._id %>" method="POST">
+              <button class="btn btn-deny" type="submit">Deny</button>
+            </form>
+          </div>
+
+        </div>
+        <% }) %>
+
+      </div>
+      <% } else { %>
+        <p class="no-data-message">All users are already verified.</p>
+      <% } %>
+
+    </div>
+
+    <!-- VEHICLE VERIFICATION -->
+    <div id="vehicle-verification" class="tab-panel <%= initialTabId === 'vehicle-verification' ? 'active' : '' %>">
+      <h3>Unverified Vehicles (<%= unverifiedVehicles.length %>)</h3>
+      <p class="panel-info">Review RC, Insurance, PUC & approve listing</p>
+
+      <% if (unverifiedVehicles.length > 0) { %>
+      <div class="verification-list">
+
+        <% unverifiedVehicles.forEach(vehicle => { %>
+        <div class="user-verification-card">
+
+          <div class="user-info-group">
+            <p><strong>Vehicle:</strong> <%= vehicle.title %></p>
+            <p><strong>Owner:</strong> <%= vehicle.owner?.name || 'N/A' %></p>
+          </div>
+
+          <div class="document-info-group">
+            <p><strong>RC:</strong> <%= vehicle.rcFile ? 'Uploaded ✔' : 'Missing ❌' %></p>
+            <% if (vehicle.rcFile) { %>
+              <a href="<%= vehicle.rcFile %>" target="_blank" class="btn btn-secondary action-btn">Review RC</a>
+            <% } %>
+
+            <p style="margin-top:10px;"><strong>Insurance:</strong> <%= vehicle.insuranceFile ? 'Uploaded ✔' : 'Missing ❌' %></p>
+            <% if (vehicle.insuranceFile) { %>
+              <a href="<%= vehicle.insuranceFile %>" target="_blank" class="btn btn-secondary action-btn">Review Insurance</a>
+            <% } %>
+
+            <p style="margin-top:10px;"><strong>PUC:</strong> <%= vehicle.pollutionFile ? 'Uploaded ✔' : 'Missing ❌' %></p>
+            <% if (vehicle.pollutionFile) { %>
+              <a href="<%= vehicle.pollutionFile %>" target="_blank" class="btn btn-secondary action-btn">Review PUC</a>
+            <% } %>
+          </div>
+
+          <div class="action-buttons-group">
+            <form action="/admin/approve-vehicle/<%= vehicle._id %>" method="POST">
+              <button class="btn btn-approve" type="submit">Approve Vehicle</button>
+            </form>
+            <form action="/admin/deny-vehicle/<%= vehicle._id %>" method="POST">
+              <button class="btn btn-deny" type="submit">Deny</button>
+            </form>
+          </div>
+
+        </div>
+        <% }) %>
+
+      </div>
+      <% } else { %>
+        <p class="no-data-message">All vehicles are verified.</p>
+      <% } %>
+
+    </div>
+
+    <!-- BOOKING LIST -->
+    <div id="bookings" class="tab-panel <%= initialTabId === 'bookings' ? 'active' : '' %>">
+      <h3>All Recent Bookings (<%= recentBookings.length %>)</h3>
+
+      <div class="booking-management-grid">
+        <% recentBookings.forEach(booking => { %>
+        <div class="booking-admin-card">
+          <div class="card-title-row">
+            <h4>Booking ID: <%= booking._id.toString().slice(0, 8) %>...</h4>
+            <span class="status-indicator status-<%= booking.status %>">
+              <%= booking.status.toUpperCase() %>
+            </span>
+          </div>
+
+          <p><strong>Vehicle:</strong> <%= booking.vehicle?.title || 'N/A' %></p>
+          <p><strong>Renter:</strong> <%= booking.renter?.name || 'N/A' %></p>
+          <p class="amount"><strong>Total:</strong> ₹<%= booking.totalAmount %></p>
+
+          <div class="action-row">
+            <a href="/admin/booking/<%= booking._id %>" class="btn btn-details">
+              View Details
+            </a>
+
+            <span class="payout-status-label">
+              Payment Status: 
+              <strong class="payment-<%= booking.paymentStatus %>">
+                <%= booking.paymentStatus.toUpperCase() %>
+              </strong>
+            </span>
+          </div>
+
+        </div>
+        <% }) %>
+      </div>
+
+    </div>
+
+    <!-- PAYOUT PANEL -->
+    <div id="payouts" class="tab-panel <%= initialTabId === 'payouts' ? 'active' : '' %>">
+      <h3>Pending Payouts</h3>
+
+      <table class="payout-table">
+        <thead>
+          <tr>
+            <th>Booking ID</th>
+            <th>Owner ID</th>
+            <th>Payout Amount</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% recentBookings.filter(b => b.paymentStatus === 'paid' && b.status === 'completed').forEach(b => { 
+            const payoutAmount = (b.totalAmount * 0.9).toFixed(2);
+          %>
+            <tr>
+              <td><%= b._id.toString().slice(0,8) %>...</td>
+              <td><%= b.vehicle?.owner?.toString().slice(0,8) || 'N/A' %>...</td>
+              <td>₹<%= payoutAmount %></td>
+              <td class="payment-unpaid">UNPAID</td>
+              <td>
+                <form action="/admin/process-payout/<%= b._id %>" method="POST">
+                  <button type="submit" class="btn btn-process">Process Payout</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const links = document.querySelectorAll('.tab-link');
+  const panels = document.querySelectorAll('.tab-panel');
+
+  function activate(id) {
+    links.forEach(l => l.classList.remove('active'));
+    panels.forEach(p => p.classList.remove('active'));
+
+    document.querySelector(`.tab-link[href="#${id}"]`)?.classList.add('active');
+    document.getElementById(id)?.classList.add('active');
+  }
+
+  links.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const id = e.target.getAttribute('href').substring(1);
+      history.pushState(null, null, `#${id}`);
+      activate(id);
+    });
+  });
+
+  activate(location.hash.substring(1) || 'user-verification');
+});
+</script>
+
+<%- include('../partials/footer') %>
